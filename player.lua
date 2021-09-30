@@ -1,23 +1,51 @@
 Player = {}
-Player.__index = Ball
+Player.__index = Player
 
-function Player:create(height, speed)
+function Player:create(height, speed, side)
   local player = {}
   setmetatable(player, Player)
-  player.height = height
-  player.speed = speed;
+  player.side = side or "left"
+  player.position = height / 2
+  player.fieldHeight = height
+  player.speed = speed
+  player.thickness = 10
+  player.height = 60
+  if (side == "left") then
+    player.width = 20
+  else
+    player.width  = love.graphics.getWidth() - 30
+  end
+
   return player
 end
 
 function Player:draw()
-  love.graphics.rectangle("fill", self.height , self.height + 50, 10, 60)
+    love.graphics.rectangle("fill", self.width , self.height + self.position, self.thickness, self.height)
+    if gball then
+      love.graphics.print(gball.location.y, 200, 200)
+    end
 end
 
-function Player:update()
-  if (love.keyboard.isDown("up") or love.keyboard.isDown("w")) and self.height > -40 then
-      self.height = self.height - self.speed
-  end
-  if (love.keyboard.isDown("down") or love.keyboard.isDown("s")) and self.height < height - 120 then
-      self.height = self.height + self.speed
+function Player:ball(ball)
+  gball = ball
+end
+
+function Player:update(ball)
+  if (self.side == "left") then
+    if (love.keyboard.isDown("up") or love.keyboard.isDown("w")) and self.position > -self.height then
+        self.position = self.position - self.speed
+    end
+    if (love.keyboard.isDown("down") or love.keyboard.isDown("s")) and self.position < self.fieldHeight - self.height * 2 then
+        self.position = self.position + self.speed
+    end
+  else
+    if (self.position - self.height * 2 < ball.location.y) and (self.position > -self.height) then
+
+      self.position = self.position - self.speed
+    end
+    if (self.position - self.height * 2 > ball.location.y) and (self.position < self.fieldHeight - self.height * 2) then
+      self.position = self.position + self.speed
+    end
+    self.ball(ball)
   end
 end
