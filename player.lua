@@ -21,13 +21,13 @@ end
 
 function Player:draw()
     love.graphics.rectangle("fill", self.width , self.height + self.position, self.thickness, self.height)
-    if gball then
-      love.graphics.print(gball.location.y, 200, 200)
+    if self.gball then
+      love.graphics.print(self.gball.location.y , 500, 500)
     end
 end
 
-function Player:ball(ball)
-  gball = ball
+function Player:setBall(ball)
+  self.gball = ball
 end
 
 function Player:update(ball)
@@ -38,14 +38,13 @@ function Player:update(ball)
     if (love.keyboard.isDown("down") or love.keyboard.isDown("s")) and self.position < self.fieldHeight - self.height * 2 then
         self.position = self.position + self.speed
     end
-  else
-    if (self.position - self.height * 2 < ball.location.y) and (self.position > -self.height) then
-
-      self.position = self.position - self.speed
-    end
-    if (self.position - self.height * 2 > ball.location.y) and (self.position < self.fieldHeight - self.height * 2) then
+  end
+  if (self.side == "right") then
+    if (self.position  + self.height  < self.gball.location.y)  then         --
       self.position = self.position + self.speed
     end
-    self.ball(ball)
+    if (self.position + self.height > self.gball.location.y - 20)  then
+      self.position = self.position - self.speed
+    end
   end
 end

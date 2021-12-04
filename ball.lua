@@ -23,7 +23,7 @@ function Ball:checkBounds(player)
     if (self.location.x > player.width - self.size - player.thickness) and (self.location.x < player.width)
     and (self.location.y <= player.position + player.height * 2 + self.size)
     and (self.location.y >= player.position + player.height - self.size) then
-      self.direction.x = self.direction.x * -1
+      return(player.side)
     end
   else
     if (self.location.x <= player.width + self.size + player.thickness)
